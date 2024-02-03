@@ -31,8 +31,9 @@
 (use-package avy
   :ensure t
   :demand t
-  :bind (("C-c j" . avy-goto-line)
-         ("s-j"   . avy-goto-char-timer)))
+  ;:bind (("C-c j" . avy-goto-line)
+  ;       ("s-j"   . avy-goto-char-timer))
+	 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -99,8 +100,8 @@
   :init
   ;; You'll want to make sure that e.g. fido-mode isn't enabled
   (vertico-mode))
-
-(use-package vertico-directory
+(elpaca-wait)
+(use-package vertico-directory :elpaca nil
   :after vertico
   :bind (:map vertico-map
               ("M-DEL" . vertico-directory-delete-word)))
@@ -121,9 +122,9 @@
         ("SPC" . corfu-insert-separator)
         ("C-n" . corfu-next)
         ("C-p" . corfu-previous)))
-
+(elpaca-wait)
 ;; Part of corfu
-(use-package corfu-popupinfo
+(use-package corfu-popupinfo :elpaca nil
   :after corfu
   :hook (corfu-mode . corfu-popupinfo-mode)
   :custom
@@ -155,7 +156,7 @@
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-(use-package eshell
+(use-package eshell :elpaca nil
   :init
   (defun bedrock/setup-eshell ()
     ;; Something funny is going on with how Eshell sets up its keymaps; this is
