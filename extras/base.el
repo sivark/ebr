@@ -31,8 +31,9 @@
 (use-package avy
   :ensure t
   :demand t
-  :bind (("C-c j" . avy-goto-line)
-         ("s-j"   . avy-goto-char-timer)))
+					;:bind (("C-c j" . avy-goto-line)
+					;       ("s-j"   . avy-goto-char-timer))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -122,9 +123,9 @@
         ("SPC" . corfu-insert-separator)
         ("C-n" . corfu-next)
         ("C-p" . corfu-previous)))
-
+(elpaca-wait)
 ;; Part of corfu
-(use-package corfu-popupinfo
+(use-package corfu-popupinfo :ensure nil
   :after corfu
   :ensure nil
   :hook (corfu-mode . corfu-popupinfo-mode)
@@ -157,7 +158,7 @@
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-(use-package eshell
+(use-package eshell :ensure nil
   :init
   (defun bedrock/setup-eshell ()
     ;; Something funny is going on with how Eshell sets up its keymaps; this is

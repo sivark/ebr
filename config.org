@@ -1,0 +1,840 @@
+#+TITLE: My literate config
+#+STARTUP: hideblocks
+
+** Setting up Elpaca for package management.
+#+begin_src emacs-lisp
+#+end_src
+** Loading packages with Elpaca.
+#+begin_src emacs-lisp
+#+end_src
+** Adding ef-themes
+#+begin_src emacs-lisp
+(use-package ef-themes)
+(elpaca-wait) 
+;(ef-themes-select 'ef-summer)
+#+end_src
+** Setting up Meow.
+#+begin_src emacs-lisp
+  (use-package meow)
+  (elpaca-wait)
+
+  (defun meow-setup ()
+    (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+    (meow-motion-overwrite-define-key
+     '("j" . meow-next)
+     '("k" . meow-prev)
+     '("<escape>" . ignore))
+    (meow-leader-define-key
+     ;; SPC j/k will run the original command in MOTION state.
+     '("j" . "H-j")
+     '("k" . "H-k")
+     ;; Use SPC (0-9) for digit arguments.
+     '("1" . meow-digit-argument)
+     '("2" . meow-digit-argument)
+     '("3" . meow-digit-argument)
+     '("4" . meow-digit-argument)
+     '("5" . meow-digit-argument)
+     '("6" . meow-digit-argument)
+     '("7" . meow-digit-argument)
+     '("8" . meow-digit-argument)
+     '("9" . meow-digit-argument)
+     '("0" . meow-digit-argument)
+     '("/" . meow-keypad-describe-key)
+     '("?" . meow-cheatsheet))
+    (meow-normal-define-key
+     '("0" . meow-expand-0)
+     '("9" . meow-expand-9)
+     '("8" . meow-expand-8)
+     '("7" . meow-expand-7)
+     '("6" . meow-expand-6)
+     '("5" . meow-expand-5)
+     '("4" . meow-expand-4)
+     '("3" . meow-expand-3)
+     '("2" . meow-expand-2)
+     '("1" . meow-expand-1)
+     '("-" . negative-argument)
+     '(";" . meow-reverse)
+     '("," . meow-inner-of-thing)
+     '("." . meow-bounds-of-thing)
+     '("[" . meow-beginning-of-thing)
+     '("]" . meow-end-of-thing)
+     '("a" . meow-append)
+     '("A" . meow-open-below)
+     '("b" . meow-back-word)
+     '("B" . meow-back-symbol)
+     '("c" . meow-change)
+     '("d" . meow-delete)
+     '("D" . meow-backward-delete)
+     '("e" . meow-next-word)
+     '("E" . meow-next-symbol)
+     '("f" . meow-find)
+     '("g" . meow-cancel-selection)
+     '("G" . meow-grab)
+     '("h" . meow-left)
+     '("H" . meow-left-expand)
+     '("i" . meow-insert)
+     '("I" . meow-open-above)
+     '("j" . meow-next)
+     '("J" . meow-next-expand)
+     '("k" . meow-prev)
+     '("K" . meow-prev-expand)
+     '("l" . meow-right)
+     '("L" . meow-right-expand)
+     '("m" . meow-join)
+     '("n" . meow-search)
+     '("o" . meow-block)
+     '("O" . meow-to-block)
+     '("p" . meow-yank)
+     '("q" . meow-quit)
+     '("Q" . meow-goto-line)
+     '("r" . meow-replace)
+     '("R" . meow-swap-grab)
+     '("s" . meow-kill)
+     '("t" . meow-till)
+     '("u" . meow-undo)
+     '("U" . meow-undo-in-selection)
+     '("v" . meow-visit)
+     '("w" . meow-mark-word)
+     '("W" . meow-mark-symbol)
+     '("x" . meow-line)
+     '("X" . meow-goto-line)
+     '("y" . meow-save)
+     '("Y" . meow-sync-grab)
+     '("z" . meow-pop-selection)
+     '("'" . repeat)
+     '("<escape>" . ignore)))
+  (meow-setup)
+  (meow-global-mode 1)
+#+end_src
+** Adding lambda themes
+#+begin_src emacs-lisp
+  (use-package lambda-themes
+    :ensure t (:host github :repo "lambda-emacs/lambda-themes") 
+    :custom
+    (lambda-themes-set-italic-comments t)
+    (lambda-themes-set-italic-keywords t)
+    (lambda-themes-set-variable-pitch t) 
+    ;; :config
+    ;; load preferred theme
+    ;; (load-theme 'lambda-light)
+    )
+#+end_src
+
+** Adding Rougier's org-margin
+#+begin_src emacs-lisp
+(use-package org-margin 
+:ensure t (:host github :repo "rougier/org-margin")
+;:config
+;(org-margin-mode 1)
+)
+#+end_src
+
+** Themes
+#+begin_src emacs-lisp
+(use-package kaolin-themes)
+#+end_src
+
+#+begin_src emacs-lisp
+;  (use-package rose-pine-emacs
+;    :ensure t (:host github :repo "thongpv87/rose-pine-emacs"))
+#+end_src
+
+** Workspaces
+Perspectives/spaces
+#+begin_src emacs-lisp
+  (use-package perspective
+	;:bind
+	;("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
+	:custom
+	(persp-mode-prefix-key (kbd "C-c C-p"))  ; pick your own prefix key here
+	:init
+	(persp-mode))
+  ; (elpaca-wait)
+    (use-package perspective-tabs
+      :after (perspective)
+      :ensure t (:host sourcehut :repo "woozong/perspective-tabs")
+      :init
+      (perspective-tabs-mode +1))
+#+end_src
+
+#+begin_src emacs-lisp
+    (use-package tabspaces
+      :ensure t (:type git :host github :repo "mclear-tools/tabspaces")
+      :hook (after-init . tabspaces-mode) ;; use this only if you want the minor-mode loaded at startup. 
+      :commands (tabspaces-switch-or-create-workspace
+		 tabspaces-open-or-create-project-and-workspace)
+      :custom
+      (tabspaces-keymap-prefix (kbd "C-c TAB"))
+      (tabspaces-use-filtered-buffers-as-default t)
+      (tabspaces-default-tab "Default")
+      (tabspaces-remove-to-default t)
+      (tabspaces-include-buffers '("*scratch*"))
+      (tabspaces-initialize-project-with-todo t)
+      (tabspaces-todo-file-name "project-todo.org")
+      ;; sessions
+      (tabspaces-session t)
+      (tabspaces-session-auto-restore t))
+
+  (defvar tabspaces-command-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "C") 'tabspaces-clear-buffers)
+      (define-key map (kbd "b") 'tabspaces-switch-to-buffer)
+      (define-key map (kbd "d") 'tabspaces-close-workspace)
+      (define-key map (kbd "k") 'tabspaces-kill-buffers-close-workspace)
+      (define-key map (kbd "o") 'tabspaces-open-or-create-project-and-workspace)
+      (define-key map (kbd "r") 'tabspaces-remove-current-buffer)
+      (define-key map (kbd "R") 'tabspaces-remove-selected-buffer)
+      (define-key map (kbd "s") 'tabspaces-switch-or-create-workspace)
+      (define-key map (kbd "t") 'tabspaces-switch-buffer-and-tab)
+      map)
+    "Keymap for tabspace/workspace commands after `tabspaces-keymap-prefix'.")
+#+end_src
+
+** Window management
+#+begin_src
+(use-package ace-window
+  :init (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l)
+              aw-char-position 'left
+              aw-ignore-current nil
+              aw-leading-char-style 'char
+              aw-scope 'frame)
+  :bind (("C-w" . ace-window)))  
+#+end_src
+
+#+begin_src emacs-lisp
+  ;;;; Increase padding of windows/frames
+  ;; Yet another one of my packages:
+  ;; <https://protesilaos.com/codelog/2023-06-03-emacs-spacious-padding/>.
+  (use-package spacious-padding
+    :config
+    (setq spacious-padding-widths
+	  '( :internal-border-width 15
+	     :header-line-width 4
+	     :mode-line-width 6
+	     :tab-width 4
+	     :right-divider-width 30
+	     :scroll-bar-width 8))
+    (setq spacious-padding-subtle  (spacious-padding-mode 1))
+    (scroll-bar-mode 0))
+#+end_src
+
+** Code auto-formatting
+[[https://github.com/lassik/emacs-format-all-the-code][Format all the code]]
+#+begin_src emacs-lisp
+(use-package format-all
+:commands format-all-mode
+   :hook (prog-mode . format-all-mode)
+   )
+#+end_src
+
+** Git gutter
+#+begin_src emacs-lisp
+(use-package git-gutter
+  :hook
+  ((prog-mode . git-gutter-mode)
+   (org-mode . git-gutter-mode))
+  :config
+  (setq git-gutter:update-interval 0.02))
+
+(use-package git-gutter-fringe
+  :config
+  (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center repeated))
+  (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
+  (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
+#+end_src
+
+** Icons
+#+begin_src emacs-lisp
+(use-package nerd-icons
+  ;; :custom
+  ;; The Nerd Font you want to use in GUI
+  ;; "Symbols Nerd Font Mono" is the default and is recommended
+  ;; but you can use any other Nerd Font if you want
+  ;; (nerd-icons-font-family "Symbols Nerd Font Mono")
+  )
+(use-package all-the-icons
+  :ensure t)
+#+end_src
+
+** Dashboard
+#+begin_src emacs-lisp
+  (use-package dashboard
+     ;:ensure t t
+    :config
+	(setq dashboard-display-icons-p t) ;; display icons on both GUI and terminal
+	(setq dashboard-icon-type 'nerd-icons) ;; use `nerd-icons' package
+        ;(setq dashboard-icon-type 'all-the-icons) ;; use `all-the-icons' package
+	(setq dashboard-center-content t)
+	(setq dashboard-projects-backend 'project-el)
+	(setq dashboard-items '((recents  . 5)
+				;(bookmarks . 2)
+				(projects . 5)
+				(agenda . 5)
+				;(registers . 5)
+				))
+        (advice-add #'dashboard-replace-displayable :override #'identity)
+	    (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
+	    (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
+	    (dashboard-setup-startup-hook))
+	  ; (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+#+end_src
+
+** Org config
+Lepisma org mode configs
+#+begin_src
+    (org-document-title
+     (:inherit variable-pitch
+	       :height 1.3
+	       :weight normal
+	       :foreground ,gray)
+     (:inherit nil
+	       :family ,et-font
+	       :height 1.8
+	       :foreground ,bg-dark
+	       :underline nil))
+    (org-document-info
+     (:foreground ,gray
+		  :slant italic)
+     (:height 1.2
+	      :slant italic))
+    (org-level-1
+     (:inherit variable-pitch
+	       :height 1.3
+	       :weight bold
+	       :foreground ,keyword
+	       :background ,bg-dark)
+     (:inherit nil
+	       :family ,et-font
+	       :height 1.6
+	       :weight normal
+	       :slant normal
+	       :foreground ,bg-dark))
+    (org-level-2
+     (:inherit variable-pitch
+	       :weight bold
+	       :height 1.2
+	       :foreground ,gray
+	       :background ,bg-dark)
+     (:inherit nil
+	       :family ,et-font
+	       :weight normal
+	       :height 1.3
+	       :slant italic
+	       :foreground ,bg-dark))
+    (org-level-3
+     (:inherit variable-pitch
+	       :weight bold
+	       :height 1.1
+	       :foreground ,slate
+	       :background ,bg-dark)
+     (:inherit nil
+	       :family ,et-font
+	       :weight normal
+	       :slant italic
+	       :height 1.2
+	       :foreground ,bg-dark))
+    (org-level-4
+     (:inherit variable-pitch
+	       :weight bold
+	       :height 1.1
+	       :foreground ,slate
+	       :background ,bg-dark)
+     (:inherit nil
+	       :family ,et-font
+	       :weight normal
+	       :slant italic
+	       :height 1.1
+	       :foreground ,bg-dark))
+    (org-level-5
+     (:inherit variable-pitch
+	       :weight bold
+	       :height 1.1
+	       :foreground ,slate
+	       :background ,bg-dark)
+     nil)
+    (org-level-6
+     (:inherit variable-pitch
+	       :weight bold
+	       :height 1.1
+	       :foreground ,slate
+	       :background ,bg-dark)
+     nil)
+    (org-level-7
+     (:inherit variable-pitch
+	       :weight bold
+	       :height 1.1
+	       :foreground ,slate
+	       :background ,bg-dark)
+     nil)
+    (org-level-8
+     (:inherit variable-pitch
+	       :weight bold
+	       :height 1.1
+	       :foreground ,slate
+	       :background ,bg-dark)
+     nil)
+    (org-headline-done
+     (:strike-through t)
+     (:family ,et-font
+	      :strike-through t))
+    (org-quote
+     (:background ,bg-dark)
+     nil)
+    (org-block
+     (:background ,bg-dark)
+     (:background nil
+		  :foreground ,bg-dark))
+    (org-block-begin-line
+     (:background ,bg-dark)
+     (:background nil
+		  :height 0.8
+		  :family ,sans-mono-font
+		  :foreground ,slate))
+    (org-block-end-line
+     (:background ,bg-dark)
+     (:background nil
+		  :height 0.8
+		  :family ,sans-mono-font
+		  :foreground ,slate))
+    (org-document-info-keyword
+     (:foreground ,comment)
+     (:height 0.8
+	      :foreground ,gray))
+    (org-link
+     (:underline nil
+		 :weight normal
+		 :foreground ,slate)
+     (:foreground ,bg-dark))
+    (org-special-keyword
+     (:height 0.9
+	      :foreground ,comment)
+     (:family ,sans-mono-font
+	      :height 0.8))
+    (org-todo
+     (:foreground ,builtin
+		  :background ,bg-dark)
+     nil)
+    (org-done
+     (:inherit variable-pitch
+	       :foreground ,dark-cyan
+	       :background ,bg-dark)
+     nil)
+    (org-agenda-current-time
+     (:foreground ,slate)
+     nil)
+    (org-hide
+     nil
+     (:foreground ,bg-white))
+    (org-indent
+     (:inherit org-hide)
+     (:inherit (org-hide fixed-pitch)))
+    (org-time-grid
+     (:foreground ,comment)
+     nil)
+    (org-warning
+     (:foreground ,builtin)
+     nil)
+    (org-date
+     nil
+     (:family ,sans-mono-font
+	      :height 0.8))
+    (org-agenda-structure
+     (:height 1.3
+	      :foreground ,doc
+	      :weight normal
+	      :inherit variable-pitch)
+     nil)
+    (org-agenda-date
+     (:foreground ,doc
+		  :inherit variable-pitch)
+     (:inherit variable-pitch
+	       :height 1.1))
+    (org-agenda-date-today
+     (:height 1.5
+	      :foreground ,keyword
+	      :inherit variable-pitch)
+     nil)
+    (org-agenda-date-weekend
+     (:inherit org-agenda-date)
+     nil)
+    (org-scheduled
+     (:foreground ,gray)
+     nil)
+    (org-upcoming-deadline
+     (:foreground ,keyword)
+     nil)
+    (org-scheduled-today
+     (:foreground ,fg-white)
+     nil)
+    (org-scheduled-previously
+     (:foreground ,slate)
+     nil)
+    (org-agenda-done
+     (:inherit nil
+	       :strike-through t
+	       :foreground ,doc)
+     (:strike-through t
+		      :foreground ,doc))
+    (org-ellipsis
+     (:underline nil
+		 :foreground ,comment)
+     (:underline nil
+		 :foreground ,comment))
+    (org-tag
+     (:foreground ,doc)
+     (:foreground ,doc))
+    (org-table
+     (:background nil)
+     (:family ,serif-mono-font
+	      :height 0.9
+	      :background ,bg-white))
+    (org-code
+     (:inherit font-lock-builtin-face)
+     (:inherit nil
+	       :family ,serif-mono-font
+	       :foreground ,comment
+	       :height 0.9))
+
+  (lambda () (progn
+    (setq left-margin-width 2)
+    (setq right-margin-width 2)
+    (set-window-buffer nil (current-buffer))))
+(setq org-startup-indented t
+      org-bullets-bullet-list '(" ") ;; no bullets, needs org-bullets package
+      org-ellipsis "  " ;; folding symbol
+      org-pretty-entities t
+      org-hide-emphasis-markers t
+      ;; show actually italicized text instead of /italicized text/
+      org-agenda-block-separator ""
+      org-fontify-whole-heading-line t
+      org-fontify-done-headline t
+      org-fontify-quote-and-verse-blocks t)
+#+end_src
+
+Prot's beautification
+#+begin_src
+    (use-package org-superstar              ; supersedes `org-bullets'
+      :ensure t t
+      :ensure
+      :after org
+      :config
+      (setq org-superstar-remove-leading-stars t)
+      (setq org-superstar-headline-bullets-list '("🞛" "◉" "○" "▷"))
+      (setq org-superstar-item-bullet-alist
+	    '((?+ . ?•)
+	      (?* . ?➤)
+	      (?- . ?–)))
+      (org-superstar-mode 1))
+
+  (use-package olivetti
+    :ensure t t
+    :ensure
+    :diminish
+    :config
+    (setq olivetti-body-width 0.65)
+    (setq olivetti-minimum-body-width 72)
+    (setq olivetti-recall-visual-line-mode-entry-state t))
+
+#+end_src
+
+[[https://binarydigitz01.gitlab.io/blog/ricing-org-mode/][blog link]]
+#+begin_src emacs-lisp
+  ;; This part has been copied and slightly modified from
+  ;; https://zzamboni.org/post/beautifying-org-mode-in-emacs/
+
+  ;; (use-package org-appear
+  ;;   :hook
+  ;;   (org-mode . org-appear-mode))
+  ;; (use-package org-superstar
+  ;;   :ensure t (:host github :repo "integral-dw/org-superstar-mode")
+  ;;   ;;:config
+  ;;   ;;(org-superstar-mode 1))
+  ;; )
+
+  (let* ((variable-tuple '(:font "Victor Mono" :italic t))
+	 (headline           `(:weight bold)))
+    (custom-theme-set-faces
+     'user
+     `(org-level-8 ((t (,@headline ,@variable-tuple))))
+     `(org-level-7 ((t (,@headline ,@variable-tuple))))
+     `(org-level-6 ((t (,@headline ,@variable-tuple))))
+     `(org-level-5 ((t (,@headline ,@variable-tuple))))
+     `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+     `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
+     `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.4))))
+     `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.5))))
+     `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
+  (custom-theme-set-faces
+   'user
+   '(variable-pitch ((t (:family "Roboto Sans" :height 150 :weight thin))))
+   '(fixed-pitch ((t ( :family "Iosevka" :height 110)))))
+
+  ;; Copied from stackoverflow, this retains colors for org src blocks and tables, while making them monospaced
+  (defun my-adjoin-to-list-or-symbol (element list-or-symbol)
+    (let ((list (if (not (listp list-or-symbol))
+		    (list list-or-symbol)
+		  list-or-symbol)))
+      (require 'cl-lib)
+      (cl-adjoin element list)))
+
+  (eval-after-load "org"
+    '(mapc
+      (lambda (face)
+	(set-face-attribute
+	 face nil
+	 :inherit
+	 (my-adjoin-to-list-or-symbol
+	  'fixed-pitch
+	  (face-attribute face :inherit))))
+      (list 'org-code 'org-block 'org-table)))
+#+end_src
+
+** Git auto-commit
+
+#+begin_src emacs-lisp
+(use-package git-auto-commit-mode
+  :config
+  (git-auto-commit-mode 1)
+  (setq git-auto-commit-mode-context 'file)
+  ; (setq-default gac-ask-for-summary-p t)
+  ; (setq-default gac-automatically-push-p t)
+)
+#+end_src
+** Structural editing
+[[https://github.com/mickeynp/combobulate][Combobulate]] for structural editing.
+#+begin_src emacs-lisp
+#+end_src
+
+Structural diff with [[https://github.com/Wilfred/difftastic][difftastic]]
+Ref: https://tsdh.org/posts/2022-08-01-difftastic-diffing-with-magit.html
+
+** Email with notmuch
+
+Starting with [[https://protesilaos.com/emacs/dotemacs#h:b26c6297-ebe8-4f99-b069-df53cfd90520][Prot's settings]].
+#+begin_src emacs-lisp
+
+    ;;;; General UI
+  (setq notmuch-show-logo nil
+	notmuch-column-control 1.0
+	notmuch-hello-auto-refresh t
+	notmuch-hello-recent-searches-max 20
+	notmuch-hello-thousands-separator ","
+	notmuch-hello-sections '(notmuch-hello-insert-saved-searches)
+	notmuch-show-all-tags-list t)
+
+
+  ;;;; Search
+  (setq notmuch-search-oldest-first nil)
+  (setq notmuch-search-result-format
+	'(("date" . "%12s  ")
+	  ("count" . "%-7s  ")
+	  ("authors" . "%-20s  ")
+	  ("subject" . "%-80s  ")
+	  ("tags" . "(%s)")))
+  (setq notmuch-tree-result-format
+	'(("date" . "%12s  ")
+	  ("authors" . "%-20s  ")
+	  ((("tree" . "%s")
+	    ("subject" . "%s"))
+	   . " %-80s  ")
+	  ("tags" . "(%s)")))
+  (setq notmuch-search-line-faces
+	'(("unread" . notmuch-search-unread-face)
+	  ("flag" . italic)))
+  (setq notmuch-show-empty-saved-searches t)
+  (setq notmuch-saved-searches
+	`(( :name "📥 inbox"
+	    :query "tag:inbox"
+	    :sort-order newest-first
+	    :key ,(kbd "i"))
+	  ( :name "💬 unread (inbox)"
+	    :query "tag:unread and tag:inbox"
+	    :sort-order newest-first
+	    :key ,(kbd "u"))
+	  ;; Emacs
+	  ( :name "🔨 emacs-devel"
+	    :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org) not tag:archived"
+	    :sort-order newest-first
+	    :key ,(kbd "e d"))
+	  ( :name "🦄 emacs-orgmode"
+	    :query "(from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org) not tag:archived"
+	    :sort-order newest-first
+	    :key ,(kbd "e o"))
+	  (:name "Substack"
+		 :query "from:*substack.com"
+		 :sort-order newest-first)))
+
+;;;; Reading messages
+  (setq notmuch-show-relative-dates t)
+  (setq notmuch-show-all-multipart/alternative-parts nil)
+  (setq notmuch-show-indent-messages-width 0)
+  (setq notmuch-show-indent-multipart nil)
+  (setq notmuch-show-part-button-default-action 'notmuch-show-view-part)
+  (setq notmuch-show-text/html-blocked-images ".") ; block everything
+  (setq notmuch-wash-wrap-lines-length 70)
+  (setq notmuch-unthreaded-show-out nil)
+  (setq notmuch-message-headers '("From" "To" "Cc" "Subject" "Date"))
+  (setq notmuch-message-headers-visible t)
+
+  (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
+    (setq notmuch-wash-citation-lines-prefix count
+          notmuch-wash-citation-lines-suffix count))
+  
+#+end_src
+
+Pulsar
+#+begin_src emacs-lisp
+
+  ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
+  (use-package pulsar
+    :config
+    (setopt pulsar-pulse t
+	    pulsar-delay 0.055
+	    pulsar-iterations 10
+	    pulsar-face 'pulsar-magenta
+	    pulsar-highlight-face 'pulsar-cyan)
+    (pulsar-global-mode 1)
+
+    ;; There are convenience functions/commands which pulse the line using
+    ;; a specific colour: `pulsar-pulse-line-red' is one of them.
+    (add-hook 'next-error-hook #'pulsar-pulse-line-red)
+    (add-hook 'next-error-hook #'pulsar-recenter-top)
+    (add-hook 'next-error-hook #'pulsar-reveal-entry)
+
+    (add-hook 'minibuffer-setup-hook #'pulsar-pulse-line-red)
+    )
+  ;; pulsar does not define any key bindings.  This is just my personal
+  ;; preference.  Remember to read the manual on the matter.  Evaluate:
+  ;;
+  ;; (info "(elisp) Key Binding Conventions")
+  ;;(prot-emacs-keybind global-map
+  ;;  "C-x l" #'pulsar-pulse-line ; override `count-lines-page'
+  ;;  "C-x L" #'pulsar-highlight-dwim)) ; or use `pulsar-highlight-line'
+#+end_src
+
+
+** ahyatt/ekg
+
+#+begin_src emacs-lisp
+  (use-package ekg
+    :ensure t (:host github :repo "ahyatt/ekg")
+    :config
+    (require 'ekg-auto-save)
+    (add-hook 'ekg-capture-mode-hook #'ekg-auto-save-mode)
+    (add-hook 'ekg-edit-mode-hook #'ekg-auto-save-mode))
+#+end_src
+
+** Auto code-formatting
+
+#+begin_src emacs-lisp
+  (use-package apheleia
+    :ensure t (:host github :repo "radian-software/apheleia")
+    :config
+    (apheleia-global-mode +1))
+#+end_src
+
+** Ctrl-F
+#+begin_src emacs-lisp
+  (use-package ctrlf
+    :ensure t (:host github :repo "radian-software/ctrlf")
+    :config
+    (ctrlf-mode +1))
+#+end_src
+
+** org-newtab
+
+#+begin_src emacs-lisp
+  (use-package org-newtab
+    :ensure t (:host github :repo "Zweihander-Main/org-newtab"))
+#+end_src
+
+** Things to explore/add
+- Treesitter
+- Combobulate
+- Corfu
+- Activities by alphapapa
+
+
+** Ebooks
+
+#+begin_src emacs-lisp
+
+  (use-package calibredb
+    :defer t
+    :config
+    (setq calibredb-root-dir "/mnt/misc/CalibreLibrary")
+    (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
+    (setq calibredb-library-alist '(("/mnt/misc/CalibreLibrary"))))
+
+(use-package nov-xwidget
+  :demand t
+  :after nov
+  :config
+  (define-key nov-mode-map (kbd "o") 'nov-xwidget-view)
+  (add-hook 'nov-mode-hook 'nov-xwidget-inject-all-files))
+#+end_src
+
+
+** Org capture templates
+#+begin_src
+  (use-package doct
+  :ensure t (:host github :repo "progfolio/doct")
+  :defer t)
+  (setq org-capture-templates (doct '(("journal" :keys "j"
+					 :file "~/org/journal.org"
+					 :datetree t
+					 :children (("Store-link"  :keys "s"
+						     :template ("* %U %a :NYXT: \n%?")
+						     :hook (lambda ()
+							     (message "Captured URL."))
+						     :immediate-finish t)
+						    ("Interaction"  :keys "i"
+						     :template ("* %U %^{Person/Meeting} :INTERACTION:")
+						     :hook (lambda ()
+							     (message "\"Recorded interaction.")))
+						    ("Note"  :keys "n"
+						     :template ("* %U %^{Description} :NOTE:")
+						     :hook (lambda ()
+							     (message "\"Recorded note.")))))
+					("browser-bookmarks" :keys "b"
+					 :file "~/org/browser-bookmarks.org"
+					 :datetree nil))))
+#+end_src
+
+#+begin_src emacs-lisp
+  (require 'org-protocol)
+  (setq org-capture-templates
+	'(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
+	   "* TODO %?\n  %i\n  %a")
+	  ("j" "Journal" entry (file+datetree "~/org/journal.org")
+	   "* %?\nEntered on %U\n  %i\n  %a")
+	  ("b" "Bookmark"
+	   entry (file+headline "~/org/browser-bookmarks.org" "Bookmarks")
+	   "* [[%^{link-url}][%^{link-description}]]")
+	  ("p" "Protocol" entry (file+headline ,(concat org-directory "browser-bookmarks.org") "Inbox")
+	   "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n%?")
+	  ("L" "Protocol Link" entry (file+headline "~/org/browser-bookmarks.org" "Inbox")
+	   "* %:link \n%:description \nCaptured at %U"
+	   :immediate-finish t)))
+#+end_src
+
+* Spell check with the Jinx package
+
+#+begin_src emacs-lisp
+  (use-package jinx
+    :ensure t (:host github :repo "minad/jinx")
+    :defer t
+    )
+#+end_src
+
+* Themes
+
+#+begin_src emacs-lisp
+  (use-package gruvbox-theme
+    :ensure t (:host github :repo "greduan/emacs-theme-gruvbox")
+    :defer t)
+
+  (use-package kanagawa-theme
+    :ensure t (:host github :repo "Fabiokleis/emacs-kanagawa-theme")
+    :defer t)
+#+end_src
