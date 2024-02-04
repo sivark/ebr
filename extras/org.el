@@ -99,6 +99,7 @@
   :config
   (require 'oc-csl)                     ; citation support
   (add-to-list 'org-export-backends 'md)
+  (add-to-list 'org-modules 'org-tempo 'org-capture)
 
   ;; Make org-open-at-point follow file links in the same window
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)

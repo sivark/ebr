@@ -228,7 +228,7 @@ If the new path's directories does not exist, create them."
 (pixel-scroll-precision-mode)                         ; Smooth scrolling
 
 ;; Use common keystrokes by default
-(cua-mode)
+; (cua-mode)
 
 ;; Display line numbers in programming mode
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
@@ -305,6 +305,7 @@ If the new path's directories does not exist, create them."
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("0f220ea77c6355c411508e71225680ecb3e308b4858ef6c8326089d9ea94b86f" default))
+ '(org-agenda-files '("/home/siva/org/inbox.org"))
  '(package-selected-packages '(eglot which-key)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
