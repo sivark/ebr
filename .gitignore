@@ -13,3 +13,4 @@ config.el
 /themes/
 tramp
 tabsession.el
+recentf
