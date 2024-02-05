@@ -1,4 +1,3 @@
-;; -*- eval: (git-auto-commit-mode 1) -*-
 #+TITLE: My literate config
 #+STARTUP: hideblocks
 
@@ -575,13 +574,18 @@ Prot's beautification
 #+end_src
 
 ** Git auto-commit
+
 #+begin_src emacs-lisp
-	(use-package git-auto-commit-mode
-	  :config
-	  (git-auto-commit-mode 1)
-	  (setq git-auto-commit-mode-context 'file)
-    ; (setq-default gac-ask-for-summary-p t)
-    ; (setq-default gac-automatically-push-p t)
-	  )
+(use-package git-auto-commit-mode
+  :config
+  (git-auto-commit-mode 1)
+  (setq git-auto-commit-mode-context 'file)
+  ; (setq-default gac-ask-for-summary-p t)
+  ; (setq-default gac-automatically-push-p t)
+)
+#+end_src
+
+[[https://github.com/mickeynp/combobulate][Combobulate]] for structural editing.
+#+begin_src emacs-lisp
 
 #+end_src
