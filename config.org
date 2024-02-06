@@ -502,7 +502,7 @@ Lepisma org mode configs
 #+end_src
 
 Prot's beautification
-#+begin_src emacs-lisp
+#+begin_src
     (use-package org-superstar              ; supersedes `org-bullets'
       :elpaca t
       :ensure
@@ -532,10 +532,8 @@ Prot's beautification
 ;; This part has been copied and slightly modified from
 ;; https://zzamboni.org/post/beautifying-org-mode-in-emacs/
 
-(let* ((variable-tuple
-        (cond ((x-list-fonts "ETBembo") '(:font "ETBembo"))))
+(let* ((variable-tuple '(:font "Iosevka"))
        (headline           `(:weight bold)))
-
   (custom-theme-set-faces
    'user
    `(org-level-8 ((t (,@headline ,@variable-tuple))))
@@ -544,13 +542,12 @@ Prot's beautification
    `(org-level-5 ((t (,@headline ,@variable-tuple))))
    `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
    `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
-   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5))))
-   `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75))))
+   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.4))))
+   `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.5))))
    `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
-
  (custom-theme-set-faces
  'user
- '(variable-pitch ((t (:family "ETBembo" :height 170 :weight thin))))
+ '(variable-pitch ((t (:family "Iosevka" :height 150 :weight thin))))
  '(fixed-pitch ((t ( :family "Fira Code Nerd Font" :height 130)))))
 
    ;; Copied from stackoverflow, this retains colors for org src blocks and tables, while making them monospaced
@@ -585,7 +582,10 @@ Prot's beautification
 )
 #+end_src
 
+
+** Structural editing
 [[https://github.com/mickeynp/combobulate][Combobulate]] for structural editing.
 #+begin_src emacs-lisp
-
 #+end_src
+
+Structural diff with [[https://github.com/Wilfred/difftastic][difftastic]]
