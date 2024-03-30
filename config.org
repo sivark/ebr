@@ -146,7 +146,7 @@ Perspectives/spaces
 	;:bind
 	;("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
 	:custom
-	(persp-mode-prefix-key (kbd "C-c C-v"))  ; pick your own prefix key here
+	(persp-mode-prefix-key (kbd "C-c C-p"))  ; pick your own prefix key here
 	:init
 	(persp-mode))
   ; (elpaca-wait)
@@ -202,10 +202,20 @@ Perspectives/spaces
 #+end_src
 
 #+begin_src emacs-lisp
-      (use-package spacious-padding
-	:config
-	(spacious-padding-mode 1))
-(scroll-bar-mode 0)
+  ;;;; Increase padding of windows/frames
+  ;; Yet another one of my packages:
+  ;; <https://protesilaos.com/codelog/2023-06-03-emacs-spacious-padding/>.
+  (use-package spacious-padding
+    :config
+    (setq spacious-padding-widths
+	  '( :internal-border-width 15
+	     :header-line-width 4
+	     :mode-line-width 6
+	     :tab-width 4
+	     :right-divider-width 30
+	     :scroll-bar-width 8))
+    (setq spacious-padding-subtle  (spacious-padding-mode 1))
+    (scroll-bar-mode 0))
 #+end_src
 
 ** Code auto-formatting
@@ -529,45 +539,54 @@ Prot's beautification
 
 [[https://binarydigitz01.gitlab.io/blog/ricing-org-mode/][blog link]]
 #+begin_src emacs-lisp
-;; This part has been copied and slightly modified from
-;; https://zzamboni.org/post/beautifying-org-mode-in-emacs/
+  ;; This part has been copied and slightly modified from
+  ;; https://zzamboni.org/post/beautifying-org-mode-in-emacs/
 
-(let* ((variable-tuple '(:font "Iosevka"))
-       (headline           `(:weight bold)))
+  ;; (use-package org-appear
+  ;;   :hook
+  ;;   (org-mode . org-appear-mode))
+  ;; (use-package org-superstar
+  ;;   :elpaca (:host github :repo "integral-dw/org-superstar-mode")
+  ;;   ;;:config
+  ;;   ;;(org-superstar-mode 1))
+  ;; )
+
+  (let* ((variable-tuple '(:font "Victor Mono" :italic t))
+	 (headline           `(:weight bold)))
+    (custom-theme-set-faces
+     'user
+     `(org-level-8 ((t (,@headline ,@variable-tuple))))
+     `(org-level-7 ((t (,@headline ,@variable-tuple))))
+     `(org-level-6 ((t (,@headline ,@variable-tuple))))
+     `(org-level-5 ((t (,@headline ,@variable-tuple))))
+     `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+     `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
+     `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.4))))
+     `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.5))))
+     `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
   (custom-theme-set-faces
    'user
-   `(org-level-8 ((t (,@headline ,@variable-tuple))))
-   `(org-level-7 ((t (,@headline ,@variable-tuple))))
-   `(org-level-6 ((t (,@headline ,@variable-tuple))))
-   `(org-level-5 ((t (,@headline ,@variable-tuple))))
-   `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
-   `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
-   `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.4))))
-   `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.5))))
-   `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
- (custom-theme-set-faces
- 'user
- '(variable-pitch ((t (:family "Iosevka" :height 150 :weight thin))))
- '(fixed-pitch ((t ( :family "Fira Code Nerd Font" :height 130)))))
+   '(variable-pitch ((t (:family "Roboto Sans" :height 150 :weight thin))))
+   '(fixed-pitch ((t ( :family "Iosevka" :height 110)))))
 
-   ;; Copied from stackoverflow, this retains colors for org src blocks and tables, while making them monospaced
-(defun my-adjoin-to-list-or-symbol (element list-or-symbol)
-  (let ((list (if (not (listp list-or-symbol))
-                  (list list-or-symbol)
-                list-or-symbol)))
-    (require 'cl-lib)
-    (cl-adjoin element list)))
+  ;; Copied from stackoverflow, this retains colors for org src blocks and tables, while making them monospaced
+  (defun my-adjoin-to-list-or-symbol (element list-or-symbol)
+    (let ((list (if (not (listp list-or-symbol))
+		    (list list-or-symbol)
+		  list-or-symbol)))
+      (require 'cl-lib)
+      (cl-adjoin element list)))
 
-(eval-after-load "org"
-  '(mapc
-    (lambda (face)
-      (set-face-attribute
-       face nil
-       :inherit
-       (my-adjoin-to-list-or-symbol
-        'fixed-pitch
-        (face-attribute face :inherit))))
-    (list 'org-code 'org-block 'org-table)))
+  (eval-after-load "org"
+    '(mapc
+      (lambda (face)
+	(set-face-attribute
+	 face nil
+	 :inherit
+	 (my-adjoin-to-list-or-symbol
+	  'fixed-pitch
+	  (face-attribute face :inherit))))
+      (list 'org-code 'org-block 'org-table)))
 #+end_src
 
 ** Git auto-commit
@@ -581,11 +600,143 @@ Prot's beautification
   ; (setq-default gac-automatically-push-p t)
 )
 #+end_src
-
-
 ** Structural editing
 [[https://github.com/mickeynp/combobulate][Combobulate]] for structural editing.
 #+begin_src emacs-lisp
 #+end_src
 
 Structural diff with [[https://github.com/Wilfred/difftastic][difftastic]]
+Ref: https://tsdh.org/posts/2022-08-01-difftastic-diffing-with-magit.html
+
+** Email with notmuch
+
+Starting with [[https://protesilaos.com/emacs/dotemacs#h:b26c6297-ebe8-4f99-b069-df53cfd90520][Prot's settings]].
+#+begin_src emacs-lisp
+
+    ;;;; General UI
+  (setq notmuch-show-logo nil
+	notmuch-column-control 1.0
+	notmuch-hello-auto-refresh t
+	notmuch-hello-recent-searches-max 20
+	notmuch-hello-thousands-separator ","
+	notmuch-hello-sections '(notmuch-hello-insert-saved-searches)
+	notmuch-show-all-tags-list t)
+
+
+  ;;;; Search
+  (setq notmuch-search-oldest-first nil)
+  (setq notmuch-search-result-format
+	'(("date" . "%12s  ")
+	  ("count" . "%-7s  ")
+	  ("authors" . "%-20s  ")
+	  ("subject" . "%-80s  ")
+	  ("tags" . "(%s)")))
+  (setq notmuch-tree-result-format
+	'(("date" . "%12s  ")
+	  ("authors" . "%-20s  ")
+	  ((("tree" . "%s")
+	    ("subject" . "%s"))
+	   . " %-80s  ")
+	  ("tags" . "(%s)")))
+  (setq notmuch-search-line-faces
+	'(("unread" . notmuch-search-unread-face)
+	  ("flag" . italic)))
+  (setq notmuch-show-empty-saved-searches t)
+  (setq notmuch-saved-searches
+	`(( :name "📥 inbox"
+	    :query "tag:inbox"
+	    :sort-order newest-first
+	    :key ,(kbd "i"))
+	  ( :name "💬 unread (inbox)"
+	    :query "tag:unread and tag:inbox"
+	    :sort-order newest-first
+	    :key ,(kbd "u"))
+	  ;; Emacs
+	  ( :name "🔨 emacs-devel"
+	    :query "(from:emacs-devel@gnu.org or to:emacs-devel@gnu.org) not tag:archived"
+	    :sort-order newest-first
+	    :key ,(kbd "e d"))
+	  ( :name "🦄 emacs-orgmode"
+	    :query "(from:emacs-orgmode@gnu.org or to:emacs-orgmode@gnu.org) not tag:archived"
+	    :sort-order newest-first
+	    :key ,(kbd "e o"))
+	  (:name "Substack"
+		 :query "from:*substack.com"
+		 :sort-order newest-first)))
+
+;;;; Reading messages
+  (setq notmuch-show-relative-dates t)
+  (setq notmuch-show-all-multipart/alternative-parts nil)
+  (setq notmuch-show-indent-messages-width 0)
+  (setq notmuch-show-indent-multipart nil)
+  (setq notmuch-show-part-button-default-action 'notmuch-show-view-part)
+  (setq notmuch-show-text/html-blocked-images ".") ; block everything
+  (setq notmuch-wash-wrap-lines-length 70)
+  (setq notmuch-unthreaded-show-out nil)
+  (setq notmuch-message-headers '("From" "To" "Cc" "Subject" "Date"))
+  (setq notmuch-message-headers-visible t)
+
+  (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
+    (setq notmuch-wash-citation-lines-prefix count
+          notmuch-wash-citation-lines-suffix count))
+  
+#+end_src
+
+Pulsar
+#+begin_src emacs-lisp
+
+  ;; Read the pulsar manual: <https://protesilaos.com/emacs/pulsar>.
+  (use-package pulsar
+    :config
+    (setopt pulsar-pulse t
+	    pulsar-delay 0.055
+	    pulsar-iterations 10
+	    pulsar-face 'pulsar-magenta
+	    pulsar-highlight-face 'pulsar-cyan)
+    (pulsar-global-mode 1)
+
+    ;; There are convenience functions/commands which pulse the line using
+    ;; a specific colour: `pulsar-pulse-line-red' is one of them.
+    (add-hook 'next-error-hook #'pulsar-pulse-line-red)
+    (add-hook 'next-error-hook #'pulsar-recenter-top)
+    (add-hook 'next-error-hook #'pulsar-reveal-entry)
+
+    (add-hook 'minibuffer-setup-hook #'pulsar-pulse-line-red)
+    )
+  ;; pulsar does not define any key bindings.  This is just my personal
+  ;; preference.  Remember to read the manual on the matter.  Evaluate:
+  ;;
+  ;; (info "(elisp) Key Binding Conventions")
+  ;;(prot-emacs-keybind global-map
+  ;;  "C-x l" #'pulsar-pulse-line ; override `count-lines-page'
+  ;;  "C-x L" #'pulsar-highlight-dwim)) ; or use `pulsar-highlight-line'
+#+end_src
+
+
+** ahyatt/ekg
+
+#+begin_src emacs-lisp
+  (use-package ekg
+    :elpaca (:host github :repo "ahyatt/ekg")
+    :config
+    (require 'ekg-auto-save)
+    (add-hook 'ekg-capture-mode-hook #'ekg-auto-save-mode)
+    (add-hook 'ekg-edit-mode-hook #'ekg-auto-save-mode))
+#+end_src
+
+** Auto code-formatting
+
+#+begin_src emacs-lisp
+  (use-package apheleia
+    :elpaca (:host github :repo "radian-software/apheleia")
+    :config
+    (apheleia-global-mode +1))
+#+end_src
+
+** Ctrl-F
+#+begin_src emacs-lisp
+  (use-package ctrlf
+    :elpaca (:host github :repo "radian-software/ctrlf")
+    :config
+    (ctrlf-mode +1))
+#+end_src
