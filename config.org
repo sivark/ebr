@@ -740,3 +740,101 @@ Pulsar
     :config
     (ctrlf-mode +1))
 #+end_src
+
+** org-newtab
+
+#+begin_src emacs-lisp
+  (use-package org-newtab
+    :elpaca (:host github :repo "Zweihander-Main/org-newtab"))
+#+end_src
+
+** Things to explore/add
+- Treesitter
+- Combobulate
+- Corfu
+- Activities by alphapapa
+
+
+** Ebooks
+
+#+begin_src emacs-lisp
+
+  (use-package calibredb
+    :defer t
+    :config
+    (setq calibredb-root-dir "/mnt/misc/CalibreLibrary")
+    (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
+    (setq calibredb-library-alist '(("/mnt/misc/CalibreLibrary"))))
+
+(use-package nov-xwidget
+  :demand t
+  :after nov
+  :config
+  (define-key nov-mode-map (kbd "o") 'nov-xwidget-view)
+  (add-hook 'nov-mode-hook 'nov-xwidget-inject-all-files))
+#+end_src
+
+
+** Org capture templates
+#+begin_src
+  (use-package doct
+  :elpaca (:host github :repo "progfolio/doct")
+  :defer t)
+  (setq org-capture-templates (doct '(("journal" :keys "j"
+					 :file "~/org/journal.org"
+					 :datetree t
+					 :children (("Store-link"  :keys "s"
+						     :template ("* %U %a :NYXT: \n%?")
+						     :hook (lambda ()
+							     (message "Captured URL."))
+						     :immediate-finish t)
+						    ("Interaction"  :keys "i"
+						     :template ("* %U %^{Person/Meeting} :INTERACTION:")
+						     :hook (lambda ()
+							     (message "\"Recorded interaction.")))
+						    ("Note"  :keys "n"
+						     :template ("* %U %^{Description} :NOTE:")
+						     :hook (lambda ()
+							     (message "\"Recorded note.")))))
+					("browser-bookmarks" :keys "b"
+					 :file "~/org/browser-bookmarks.org"
+					 :datetree nil))))
+#+end_src
+
+#+begin_src emacs-lisp
+  (require 'org-protocol)
+  (setq org-capture-templates
+	'(("t" "Todo" entry (file+headline "~/org/gtd.org" "Tasks")
+	   "* TODO %?\n  %i\n  %a")
+	  ("j" "Journal" entry (file+datetree "~/org/journal.org")
+	   "* %?\nEntered on %U\n  %i\n  %a")
+	  ("b" "Bookmark"
+	   entry (file+headline "~/org/browser-bookmarks.org" "Bookmarks")
+	   "* [[%^{link-url}][%^{link-description}]]")
+	  ("p" "Protocol" entry (file+headline ,(concat org-directory "browser-bookmarks.org") "Inbox")
+	   "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n%?")
+	  ("L" "Protocol Link" entry (file+headline "~/org/browser-bookmarks.org" "Inbox")
+	   "* %:link \n%:description \nCaptured at %U"
+	   :immediate-finish t)))
+#+end_src
+
+* Spell check with the Jinx package
+
+#+begin_src emacs-lisp
+  (use-package jinx
+    :elpaca (:host github :repo "minad/jinx")
+    :defer t
+    )
+#+end_src
+
+* Themes
+
+#+begin_src emacs-lisp
+  (use-package gruvbox-theme
+    :elpaca (:host github :repo "greduan/emacs-theme-gruvbox")
+    :defer t)
+
+  (use-package kanagawa-theme
+    :elpaca (:host github :repo "Fabiokleis/emacs-kanagawa-theme")
+    :defer t)
+#+end_src

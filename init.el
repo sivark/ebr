@@ -306,12 +306,36 @@ If the new path's directories does not exist, create them."
  '(custom-safe-themes
    '("0f220ea77c6355c411508e71225680ecb3e308b4858ef6c8326089d9ea94b86f" default))
  '(org-agenda-files '("/home/siva/org/inbox.org"))
- '(package-selected-packages '(eglot which-key)))
+ '(package-selected-packages '(jinx eglot which-key)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(fixed-pitch ((t (:family "Iosevka" :height 110))))
+ '(fringe ((t :background "#ffffff")))
+ '(header-line ((t :box (:line-width 4 :color "#e5e5e5" :style nil))))
+ '(header-line-highlight ((t :box (:color "#000000"))))
+ '(keycast-key ((t)))
+ '(line-number ((t :background "#ffffff")))
+ '(mode-line ((t :box (:line-width 6 :color "#d7d7d7" :style nil))))
+ '(mode-line-active ((t :box (:line-width 6 :color "#d7d7d7" :style nil))))
+ '(mode-line-highlight ((t :box (:color "#000000"))))
+ '(mode-line-inactive ((t :box (:line-width 6 :color "#efefef" :style nil))))
+ '(org-document-title ((t (:weight bold :font "Victor Mono" :italic t :height 2.0 :underline nil))))
+ '(org-level-1 ((t (:weight bold :font "Victor Mono" :italic t :height 1.5))))
+ '(org-level-2 ((t (:weight bold :font "Victor Mono" :italic t :height 1.4))))
+ '(org-level-3 ((t (:weight bold :font "Victor Mono" :italic t :height 1.25))))
+ '(org-level-4 ((t (:weight bold :font "Victor Mono" :italic t :height 1.1))))
+ '(org-level-5 ((t (:weight bold :font "Victor Mono" :italic t))))
+ '(org-level-6 ((t (:weight bold :font "Victor Mono" :italic t))))
+ '(org-level-7 ((t (:weight bold :font "Victor Mono" :italic t))))
+ '(org-level-8 ((t (:weight bold :font "Victor Mono" :italic t))))
+ '(tab-bar-tab ((t :box (:line-width 4 :color "#f6f6f6" :style nil))))
+ '(tab-bar-tab-inactive ((t :box (:line-width 4 :color "#b7b7b7" :style nil))))
+ '(variable-pitch ((t (:family "Roboto Sans" :height 150 :weight thin))))
+ '(window-divider ((t :background "#ffffff" :foreground "#ffffff")))
+ '(window-divider-first-pixel ((t :background "#ffffff" :foreground "#ffffff")))
+ '(window-divider-last-pixel ((t :background "#ffffff" :foreground "#ffffff"))))
 
 (add-to-list 'custom-theme-load-path "~/emacs-bedrock/themes")
